@@ -8,7 +8,6 @@ from .views_dir.productCatView import ProductCatApiView
 from .views_dir.expenseCatView import ExpenseCatApiView
 from .views_dir.paymentInView import PaymentInApiView
 from .views_dir.paymentOutView import PaymentOutApiView
-from .views_dir.orderListView import OrderListApiView
 from .views_dir.balanceAdjustView import BalanceAdjustApiView
 from .views_dir.permissionView import PermissionApiView,RoleApiView
 from .views_dir.itemActivityView import ItemActivityApiView
@@ -26,7 +25,6 @@ ExpenseCatApiView = ExpenseCatApiView
 PaymentInApiView = PaymentInApiView
 PaymentOutApiView = PaymentOutApiView
 
-OrderListApiView = OrderListApiView
 BalanceAdjustApiView = BalanceAdjustApiView
 
 PermissionApiview = PermissionApiView
