@@ -35,6 +35,12 @@ ROLE_RULES = {
         Product: ("add", "view", "change"),
         ProductCategory: ("view",),
     },
+    "Guest":{
+        Customer: ("view"),
+        Expense: ("view"),
+        Product: ("view",),
+        ProductCategory: ("view",),
+    }
 }
 
 
