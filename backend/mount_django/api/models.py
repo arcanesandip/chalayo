@@ -8,7 +8,55 @@ from django.utils import timezone
 from django.conf import settings
 from django.contrib.auth.models import Group,Permission
 
+class Company(models.Model):
+    owner = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="own_company",
+    )
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=15, blank=True)
+    tax_id = models.CharField(max_length=15, blank=True)
+
+    managers = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name="managed_companies",
+        blank=True
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("name",)
+        
+    def __str__(self):
+        return self.name
+    
+class CompanyRole(models.Model):
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.CASCADE,
+        related_name="roles"
+    )
+    name = models.CharField(max_length=150)
+    permissions = models.ManyToManyField(Permission, blank=True)
+
+    class Meta:
+        unique_together = ("company", "name")
+
+    def __str__(self):
+        return f"{self.company.name} - {self.name}"
+
 class User(AbstractUser):
+    role = models.ForeignKey(
+    CompanyRole,
+    on_delete=models.CASCADE,
+    related_name="users",
+    null=True,   # allow superuser without role at first
+    blank=True
+)
     phone = models.CharField(max_length=15, blank=True)
     email = models.EmailField(blank=True)
     has_paid_for_company = models.BooleanField(default=False)
@@ -38,50 +86,8 @@ class User(AbstractUser):
         if self.owned_company:
             return True
         return super().has_perm(perm, obj)
-    
 
-class Company(models.Model):
-    owner = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="own_company",
-    )
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=100)
-    email = models.EmailField()
-    phone = models.CharField(max_length=15, blank=True)
-    tax_id = models.CharField(max_length=15, blank=True)
-
-    managers = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
-        related_name="managed_companies",
-        blank=True
-    )
-
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.name
-
-
-
-    
-class CompanyRole(models.Model):
-    company = models.ForeignKey(
-        Company,
-        on_delete=models.CASCADE,
-        related_name="roles"
-    )
-    name = models.CharField(max_length=150)
-    permissions = models.ManyToManyField(Permission, blank=True)
-
-    class Meta:
-        unique_together = ("company", "name")
-
-    def __str__(self):
-        return f"{self.company.name} - {self.name}"
-
-           
+  
 class Customer(models.Model):  # sabina
     company = models.ForeignKey(
         Company, on_delete=models.CASCADE, related_name="customers"
@@ -103,9 +109,6 @@ class Customer(models.Model):  # sabina
         constraints =[
             models.UniqueConstraint(fields=['company','name'],name="unique_customer_per_company")
                     ]
-
-
-
 class ProductCategory(models.Model):
     company = models.ForeignKey(
         Company, on_delete=models.CASCADE, related_name="product_categories"
@@ -153,168 +156,155 @@ class Product(models.Model):
         super().save(*args, **kwargs)
 
 
+class Invoice(models.Model):
+    # Define choices
+    INVOICE_TYPE_CHOICES = [
+        ("SALE", "Sales Invoice"),
+        ("PURCHASE", "Purchase Invoice"),
+    ]
 
-class OrderList(models.Model):
-    company = models.ForeignKey(
-        Company, on_delete=models.CASCADE, related_name="orders"
-    )
-    uid = models.UUIDField(default=uuid.uuid4, editable=False)
+    PAYMENT_STATUS_CHOICES = [
+        ("PENDING", "Pending"),
+        ("PARTIAL", "Partially Paid"),
+        ("PAID", "Fully Paid"),
+        ("CANCELLED", "Cancelled"),
+    ]
 
-    created_at = models.DateTimeField(default=timezone.now)
     customer = models.ForeignKey(
         Customer,
         on_delete=models.CASCADE,
-        related_name="orders",
+        related_name="invoices",
+        null=True,
+        blank=True,
     )
+    uid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    invoice_number = models.CharField(max_length=50, unique=True, blank=True)
+    invoice_type = models.CharField(
+        max_length=10, choices=INVOICE_TYPE_CHOICES, default="SALE"
+    )
+    created_at = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True, related_name="created_orders"
+        User, on_delete=models.SET_NULL, null=True, related_name="created_invoices"
     )
-    notes = models.TextField(blank=True, null=True)
-    is_simple_invoice = models.BooleanField(default=False)
+
     invoice_description = models.TextField(blank=True, null=True)
 
-    def save(self, *args, **kwargs):
-        if self.created_by:
-            is_owner = self.created_by.owned_company == self.company
-            is_manager = self.company.managers.filter(id=self.created_by.id).exists()
+    # Financial Summary (calculated from bills)
+    subtotal = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    tax_amount = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    global_discount = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    total_amount = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    paid_amount = models.DecimalField(max_digits=15, decimal_places=2, default=0)
 
-            if not (is_owner or is_manager):
-                raise ValidationError("User doesn't have company access")
+    # Status
+    payment_status = models.CharField(
+        max_length=10, choices=PAYMENT_STATUS_CHOICES, default="PENDING"
+    )
 
-        super().save(*args, **kwargs)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["invoice_number"]),
+            models.Index(fields=["created_at"]),
+            models.Index(fields=["payment_status"]),
+        ]
 
     def __str__(self):
-        type_str = "Simple" if self.is_simple_invoice else "Detailed"
-        return f"{type_str} Order {self.id} - {self.customer.name}"
-    
-class OrderSummary(models.Model):
-    order = models.OneToOneField(
-        OrderList, on_delete=models.CASCADE,null=True,blank=True, related_name="summary"
+        return f"Invoice {self.invoice_number}"
+
+    @property
+    def due_amount(self):
+        """Calculate due amount dynamically"""
+        return Decimal(str(self.total_amount)) - Decimal(str(self.paid_amount))
+
+
+class InvoiceItem(models.Model):
+
+    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name="bills")
+    product = models.ForeignKey(
+        Product, null=True, blank=True, on_delete=models.SET_NULL, related_name="bills"
     )
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    discount = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
-    tax = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
-    final_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    received_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    due_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    calculated_on = models.DateTimeField(auto_now=True)
-    # payment status
-    PAYMENT_STATUS_CHOICES = [
-        ("UNPAID", "Unpaid"),
-        ("PARTIAL", "Partial"),
-        ("PAID", "Paid"),
+   
+    quantity = models.PositiveIntegerField(default=1)
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2)
+    discount_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        ordering = ["created_at"]
+        indexes = [
+            models.Index(fields=["invoice"]),
+        ]
+
+    def __str__(self):
+        if self.product:
+            return f"{self.product.name} x {self.quantity}"
+        return f"{self.quantity}"
+
+    @property
+    def line_total(self):
+        try:
+            total = Decimal(str(self.quantity)) * Decimal(str(self.unit_price))
+            total -= Decimal(str(self.discount_amount))
+            return total
+        except:
+            return Decimal("0")
+
+
+class Payment(models.Model):
+    PAYMENT_METHOD_CHOICES = [
+        ("CASH", "Cash"),
+        ("CARD", "Card"),
+        ("ONLINE", "Online"),
     ]
 
-    payment_status = models.CharField(
-        max_length=50, choices=PAYMENT_STATUS_CHOICES, default="UNPAID"
+    invoice = models.ForeignKey(
+        Invoice, on_delete=models.CASCADE, related_name="payments"
+    )
+    customer = models.ForeignKey(Customer,on_delete=models.CASCADE,related_name="customers_payment")
+
+    amount = models.DecimalField(max_digits=15, decimal_places=2)
+    payment_method = models.CharField(
+        max_length=20, choices=PAYMENT_METHOD_CHOICES, default="CASH"
+    )
+    
+    # FULL UUID (system transaction id)
+    transaction_id = models.UUIDField(
+        default=uuid.uuid4,
+        unique=True,
+        editable=False,
+        db_index=True,
     )
 
-    def clean(self):
-        """
-        Custom validation for amount fields.
+    notes = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
-        With max_digits=10 and decimal_places=2, the DB already limits:
-        - 8 integer digits + 2 decimal digits
-
-        Here we enforce that same rule with a clear message BEFORE hitting DB.
-
-        """
-        super().clean()
-
-        # Max allowed value: 99,999,999.99 (8 digits before decimal, 2 after)
-        max_amount = Decimal("99999999.99")
-
-        errors = {}
-
-        # Check all relevant monetary field
-
-        if self.total_amount is not None and self.total_amount > max_amount:
-            print("ma error ho")
-            errors["total_amount"] = [
-                "Value cannot have more than 8 digits before the decimal "
-                "(maximum allowed is 99,999,999.99)."
-            ]
-
-        if errors:
-            # Raise one ValidationError containing field-specific messages
-            raise ValidationError(errors)
+    received_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, related_name="received_payments"
+    )
 
     def __str__(self):
-        return f"total amount:{self.total_amount}"
+        return f"Payment {self.amount} - {self.invoice.invoice_number}"  # models.py
 
 class RemainingAmount(models.Model):
     customer = models.ForeignKey(
         Customer, on_delete=models.CASCADE, related_name="customerRemainingAmount"
     )
     orders = models.OneToOneField(
-        OrderList, on_delete=models.CASCADE, related_name="remaining",null=True,blank=True
+        Invoice, on_delete=models.CASCADE, related_name="remaining",null=True,blank=True
     )
     remaining_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
 
     def __str__(self):
         return f"{self.id}"
     
-class Purchase(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE,related_name="purchases")
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE,related_name="purchase")
-
-    summary = models.OneToOneField(OrderSummary,on_delete=models.SET_NULL,null=True,related_name="purchaseordersumarry")
-
-    remaining = models.OneToOneField(RemainingAmount,on_delete=models.SET_NULL,null=True,related_name="remainingafterpurchase")
-
-    uid = models.UUIDField(default=uuid.uuid4, editable=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    notes = models.TextField(blank=True, null=True)
-
-    def __str__(self):
-        return f"Purchase #{self.id}"
-
-class Bill(models.Model):
-    order = models.ForeignKey(OrderList, on_delete=models.CASCADE,null=True, related_name="bills")
-    purchase = models.ForeignKey(Purchase, on_delete=models.CASCADE,null=True, related_name="bill")
-    # CHANGED: Product can be null for simple invoices
-    product = models.ForeignKey(
-        Product,
-        on_delete=models.SET_NULL,  # Changed from CASCADE
-        null=True,  # Allow null
-        blank=True,  # Allow blank
-        related_name="bills",
-    )
-
-    product_price = models.DecimalField(max_digits=10, decimal_places=2)
-    quantity = models.PositiveIntegerField(default=1)
-    discount = models.DecimalField(max_digits=10, decimal_places=2)
-    # NEW: Description for simple invoice items
-    description = models.TextField(blank=True, null=True)
-
-    created_at = models.DateTimeField(default=timezone.now)
-
-    @property
-    def line_total(self):
-        """Calculate line total: quantity × price"""
-        return Decimal(str(self.quantity)) * Decimal(str(self.product_price))
-
-    def clean(self):
-        """Validate data integrity"""
-        # For detailed invoices (has product), check company match
-        if self.product and self.product.company != self.order.company:
-            raise ValidationError("Product doesn't belong to order's company")
-
-        # For simple invoices (no product), require description
-        if not self.product and not self.description:
-            raise ValidationError("Description required for simple invoice items")
-
-    def __str__(self):
-        return f"Bill {self.id}"
-
 class AdditionalCharges(models.Model):
     additional_charges = models.ForeignKey(
-        OrderList, on_delete=models.SET_NULL,null=True, related_name="charges"
+        Invoice, on_delete=models.SET_NULL,null=True, related_name="charges"
     )
 
-    purchase_additional_charges = models.ForeignKey(Purchase,
-     on_delete=models.SET_NULL,null=True, related_name="purchase_charges"
-    )
     charge_name = models.CharField(max_length=200)
     additional_amount = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
 
@@ -323,9 +313,9 @@ class AdditionalCharges(models.Model):
 
 class ItemActivity(models.Model):
     order = models.ForeignKey(
-        OrderList, on_delete=models.CASCADE, null=True, related_name="orderactivities"
+        Invoice, on_delete=models.CASCADE, null=True, related_name="orderactivities"
     )
-    purchase = models.ForeignKey(Purchase,on_delete=models.CASCADE,null=True,related_name="purchaseactivities")
+ 
     product = models.ForeignKey(
         Product, on_delete=models.PROTECT, related_name="activities"
     )
