@@ -28,6 +28,9 @@ class Company(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ("name",)
+        
     def __str__(self):
         return self.name
     
@@ -83,7 +86,8 @@ class User(AbstractUser):
         if self.owned_company:
             return True
         return super().has_perm(perm, obj)
-    
+
+  
 class Customer(models.Model):  # sabina
     company = models.ForeignKey(
         Company, on_delete=models.CASCADE, related_name="customers"
