@@ -29,3 +29,11 @@
 * {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
+
+body, html {
+  scroll-behavior: smooth;
+}
+
+button {
+  cursor: pointer;
+}
