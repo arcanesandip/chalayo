@@ -1,0 +1,20 @@
+/* Centralized CSS variables for colors and spacing */
+:root {
+  /* Primary palette */
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-500: #2563eb; /* blue-600 */
+  --color-primary-700: #1d4ed8; 
+
+  /* Secondary / accent */
+  --color-accent-500: #7c3aed; /* purple-600 */
+
+  /* Neutral */
+  --color-bg: #ffffff;
+  --color-surface: rgba(255,255,255,0.9);
+  --color-text: #111827;
+
+  /* Actions */
+  --color-success: #10b981;
+  --color-danger: #ef4444;
+}

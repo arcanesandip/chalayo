@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Button from '../components/ui/Button';
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -124,14 +125,14 @@ export default function Login() {
                 </div>
               </div>
 
-              {/* Submit Button */}
-              <button
+              {/* Submit Button (reusable) */}
+              <Button
                 type="submit"
                 className="flex w-full items-center justify-center gap-2 rounded-lg bg-linear-to-r from-blue-600 to-indigo-600 px-4 py-3 font-semibold text-white shadow-lg transition duration-200 hover:from-blue-700 hover:to-indigo-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
               >
                 <i className="fas fa-sign-in-alt"></i>
                 <span>Sign In</span>
-              </button>
+              </Button>
             </form>
 
             {/* Footer */}
