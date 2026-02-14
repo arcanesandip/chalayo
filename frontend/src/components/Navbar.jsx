@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -51,12 +52,13 @@ export default function Navbar() {
 
             {/* CTA Buttons */}
             <div className="flex items-center space-x-4">
-              <a
-                href="/login/"
+              {/* changed to Link for client-side navigation */}
+              <Link
+                to="/login"
                 className="hidden items-center justify-center px-4 py-2 text-sm font-medium text-blue-600 transition-colors hover:text-blue-700 lg:inline-flex"
               >
                 Sign In
-              </a>
+              </Link>
               <a
                 href="#start-free"
                 className="inline-flex items-center justify-center rounded-lg bg-linear-to-r from-blue-500 to-purple-600 px-4 py-2 text-sm font-medium text-white transition-all duration-200 hover:shadow-lg"
@@ -179,12 +181,12 @@ export default function Navbar() {
               </a>
 
               <div className="mt-12 space-y-4">
-                <a
-                  href="/login/"
+                <Link
+                  to="/login"
                   className="block w-full rounded-lg bg-linear-to-r from-blue-500 to-purple-600 px-4 py-3 text-center font-medium text-white"
                 >
                   Sign In
-                </a>
+                </Link>
                 <a
                   href="#start-free"
                   className="block w-full rounded-lg border-2 border-gray-200 px-4 py-3 text-center font-medium text-gray-700"

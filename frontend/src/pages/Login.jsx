@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -6,6 +7,8 @@ export default function Login() {
     password: '',
   });
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,8 +24,13 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Add your login logic here
+    // Added simple client-side check: username 'su' and password 'su' -> dashboard
+    // (This is intentionally simple for demo/testing purposes.)
+    if (formData.username.trim() === 'su' && formData.password === 'su') {
+      navigate('/dashboard');
+    } else {
+      setError('Invalid username or password');
+    }
   };
 
   return (
@@ -43,13 +51,13 @@ export default function Login() {
 
           {/* Body */}
           <div className="p-8">
-            {/* Error Message Example - Uncomment to show */}
-            {/* <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3 text-red-800">
-              <i className="fas fa-exclamation-circle text-red-500 mt-0.5"></i>
-              <span className="text-sm">
-                Your username and password didn't match. Please try again.
-              </span>
-            </div> */}
+            {/* Error Message (shown when credentials are invalid) */}
+            {error && (
+              <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
+                <i className="fas fa-exclamation-circle mt-0.5 text-red-500"></i>
+                <span className="text-sm">{error}</span>
+              </div>
+            )}
 
             {/* Login Form */}
             <form onSubmit={handleSubmit} className="space-y-6">
