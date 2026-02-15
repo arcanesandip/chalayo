@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import './Button.css';
 
 export default function Button({
   children,
@@ -7,9 +8,7 @@ export default function Button({
   onClick,
   type = 'button',
 }) {
-  const base =
-    'inline-flex items-center justify-center rounded-lg px-4 py-2 font-medium transition';
-  const classes = `${base} ${className}`;
+  const classes = `button-base ${className}`;
 
   if (to) {
     return (

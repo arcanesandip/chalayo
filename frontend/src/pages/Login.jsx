@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/ui/Button';
+import './Login.css';
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -35,51 +36,46 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-blue-50 to-indigo-100 p-4">
-      <div className="w-full max-w-md">
+    <div className="login-page">
+      <div className="login-wrapper">
         {/* Login Container */}
-        <div className="overflow-hidden rounded-2xl bg-white shadow-2xl">
+        <div className="login-card">
           {/* Header */}
-          <div className="bg-linear-to-r from-blue-600 to-indigo-600 p-8 text-center text-white">
-            <h1 className="mb-2 flex items-center justify-center gap-2 text-3xl font-bold">
+          <div className="login-header">
+            <h1 className="login-title">
               <i className="fas fa-file-invoice-dollar"></i>
               <span>InvoicePro</span>
             </h1>
-            <p className="text-sm text-blue-100">
-              Access your billing dashboard
-            </p>
+            <p className="login-subtitle">Access your billing dashboard</p>
           </div>
 
           {/* Body */}
-          <div className="p-8">
+          <div className="login-body">
             {/* Error Message (shown when credentials are invalid) */}
             {error && (
-              <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
-                <i className="fas fa-exclamation-circle mt-0.5 text-red-500"></i>
-                <span className="text-sm">{error}</span>
+              <div className="error-message">
+                <i className="fas fa-exclamation-circle error-icon"></i>
+                <span className="error-text">{error}</span>
               </div>
             )}
 
             {/* Login Form */}
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="login-form">
               {/* Username Field */}
-              <div>
-                <label
-                  htmlFor="id_username"
-                  className="mb-2 block text-sm font-medium text-gray-700"
-                >
-                  <i className="fas fa-user mr-2 text-gray-500"></i>
+              <div className="form-group">
+                <label htmlFor="id_username" className="form-label">
+                  <i className="fas fa-user label-icon"></i>
                   Username
                 </label>
-                <div className="relative">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                    <i className="fas fa-user text-gray-400"></i>
+                <div className="input-wrapper">
+                  <div className="input-icon">
+                    <i className="fas fa-user"></i>
                   </div>
                   <input
                     type="text"
                     name="username"
                     id="id_username"
-                    className="w-full rounded-lg border border-gray-300 py-3 pr-4 pl-10 transition duration-200 outline-none focus:border-transparent focus:ring-2 focus:ring-blue-500"
+                    className="form-input"
                     placeholder="Enter your username"
                     value={formData.username}
                     onChange={handleChange}
@@ -90,23 +86,20 @@ export default function Login() {
               </div>
 
               {/* Password Field */}
-              <div>
-                <label
-                  htmlFor="id_password"
-                  className="mb-2 block text-sm font-medium text-gray-700"
-                >
-                  <i className="fas fa-key mr-2 text-gray-500"></i>
+              <div className="form-group">
+                <label htmlFor="id_password" className="form-label">
+                  <i className="fas fa-key label-icon"></i>
                   Password
                 </label>
-                <div className="relative">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                    <i className="fas fa-key text-gray-400"></i>
+                <div className="input-wrapper">
+                  <div className="input-icon">
+                    <i className="fas fa-key"></i>
                   </div>
                   <input
                     type={showPassword ? 'text' : 'password'}
                     name="password"
                     id="id_password"
-                    className="w-full rounded-lg border border-gray-300 py-3 pr-12 pl-10 transition duration-200 outline-none focus:border-transparent focus:ring-2 focus:ring-blue-500"
+                    className="form-input form-input-password"
                     placeholder="Enter your password"
                     value={formData.password}
                     onChange={handleChange}
@@ -115,7 +108,7 @@ export default function Login() {
                   <button
                     type="button"
                     onClick={togglePasswordVisibility}
-                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 transition duration-200 hover:text-gray-600"
+                    className="password-toggle"
                     aria-label="Toggle password visibility"
                   >
                     <i
@@ -126,21 +119,15 @@ export default function Login() {
               </div>
 
               {/* Submit Button (reusable) */}
-              <Button
-                type="submit"
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-linear-to-r from-blue-600 to-indigo-600 px-4 py-3 font-semibold text-white shadow-lg transition duration-200 hover:from-blue-700 hover:to-indigo-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
-              >
+              <Button type="submit" className="login-submit-button">
                 <i className="fas fa-sign-in-alt"></i>
                 <span>Sign In</span>
               </Button>
             </form>
 
             {/* Footer */}
-            <div className="mt-6 text-center">
-              <a
-                href="/admin/"
-                className="inline-flex items-center gap-2 text-sm text-gray-600 transition duration-200 hover:text-blue-600"
-              >
+            <div className="login-footer">
+              <a href="/admin/" className="admin-link">
                 <i className="fas fa-cog"></i>
                 <span>Admin Access</span>
               </a>

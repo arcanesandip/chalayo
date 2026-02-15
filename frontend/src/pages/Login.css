@@ -1,0 +1,201 @@
+/* Login Page */
+.login-page {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom right, #eff6ff, #e0e7ff);
+  padding: 1rem;
+}
+
+.login-wrapper {
+  width: 100%;
+  max-width: 28rem;
+}
+
+/* Login Card */
+.login-card {
+  overflow: hidden;
+  border-radius: 1rem;
+  background-color: white;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Login Header */
+.login-header {
+  background: linear-gradient(to right, #2563eb, #4f46e5);
+  padding: 2rem;
+  text-align: center;
+  color: white;
+}
+
+.login-title {
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1.875rem;
+  font-weight: 700;
+}
+
+.login-subtitle {
+  font-size: 0.875rem;
+  color: #dbeafe;
+}
+
+/* Login Body */
+.login-body {
+  padding: 2rem;
+}
+
+/* Error Message */
+.error-message {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #fecaca;
+  background-color: #fef2f2;
+  padding: 1rem;
+  color: #991b1b;
+}
+
+.error-icon {
+  margin-top: 0.125rem;
+  color: #ef4444;
+}
+
+.error-text {
+  font-size: 0.875rem;
+}
+
+/* Login Form */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Form Group */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  margin-bottom: 0.5rem;
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.label-icon {
+  margin-right: 0.5rem;
+  color: #6b7280;
+}
+
+/* Input Wrapper */
+.input-wrapper {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  padding-left: 0.75rem;
+  pointer-events: none;
+  color: #9ca3af;
+}
+
+/* Form Input */
+.form-input {
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.form-input:focus {
+  border-color: transparent;
+  box-shadow: 0 0 0 2px #3b82f6;
+}
+
+.form-input-password {
+  padding-right: 3rem;
+}
+
+/* Password Toggle */
+.password-toggle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  padding-right: 0.75rem;
+  color: #9ca3af;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.password-toggle:hover {
+  color: #4b5563;
+}
+
+/* Submit Button */
+.login-submit-button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(to right, #2563eb, #4f46e5);
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.login-submit-button:hover {
+  background: linear-gradient(to right, #1d4ed8, #4338ca);
+}
+
+.login-submit-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px white, 0 0 0 4px #3b82f6;
+}
+
+/* Login Footer */
+.login-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.admin-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.admin-link:hover {
+  color: #2563eb;
+}
