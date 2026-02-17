@@ -1,50 +1,118 @@
+import React from 'react';
+
+const styles = {
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderBottom: '1px solid #e2e8f0',
+    backgroundColor: '#ffffff',
+    padding: '16px',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+  },
+  left: {
+    display: 'flex',
+    flex: 1,
+    alignItems: 'center',
+    gap: '12px',
+  },
+  hamburger: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '40px',
+    width: '40px',
+    borderRadius: '12px',
+    border: 'none',
+    background: 'transparent',
+    cursor: 'pointer',
+    transition: 'background-color 0.15s ease',
+  },
+  hamburgerIcon: {
+    height: '24px',
+    width: '24px',
+    color: '#334155',
+  },
+  title: {
+    margin: 0,
+    fontSize: '1.125rem',
+    fontWeight: 600,
+    color: '#0f172a',
+  },
+  right: {
+    display: 'flex',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  avatar: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '40px',
+    width: '40px',
+    borderRadius: '12px',
+    background: 'linear-gradient(to bottom right, #10b981, #0d9488)',
+    fontSize: '0.875rem',
+    fontWeight: 700,
+    color: '#ffffff',
+    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+  },
+};
+
 export default function Header({ menuItems, activeTab, setSidebarOpen }) {
+  const [hamburgerHovered, setHamburgerHovered] = React.useState(false);
+
+  // Hide hamburger on large screens (≥1024px)
+  const [isLargeScreen, setIsLargeScreen] = React.useState(
+    typeof window !== 'undefined' ? window.innerWidth >= 1024 : false
+  );
+
+  React.useEffect(() => {
+    const handleResize = () => setIsLargeScreen(window.innerWidth >= 1024);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const activeLabel =
+    menuItems.find((item) => item.id === activeTab)?.label || 'Dashboard';
+
   return (
-    <div className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-4 shadow-sm md:px-6">
+    <div style={styles.header}>
       {/* Left - Hamburger + Title */}
-      <div className="flex flex-1 items-center space-x-3">
-        {/* Hamburger Menu Button - Mobile Only */}
-        <button
-          onClick={() => setSidebarOpen(true)}
-          className="flex h-10 w-10 items-center justify-center rounded-xl transition-colors hover:bg-slate-100 lg:hidden"
-        >
-          <svg
-            className="h-6 w-6 text-slate-700"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+      <div style={styles.left}>
+        {!isLargeScreen && (
+          <button
+            onClick={() => setSidebarOpen(true)}
+            style={{
+              ...styles.hamburger,
+              backgroundColor: hamburgerHovered ? '#f1f5f9' : 'transparent',
+            }}
+            onMouseEnter={() => setHamburgerHovered(true)}
+            onMouseLeave={() => setHamburgerHovered(false)}
+            aria-label="Open menu"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
-        </button>
-
-        <h2 className="text-lg font-semibold text-slate-900 md:text-xl">
-          {menuItems.find((item) => item.id === activeTab)?.label ||
-            'Dashboard'}
-        </h2>
+            <svg
+              style={styles.hamburgerIcon}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+        )}
+        <h2 style={styles.title}>{activeLabel}</h2>
       </div>
 
-      {/* Center - Time and Date */}
-      <div className="hidden flex-1 items-center justify-center space-x-3 lg:flex">
-        <div className="flex items-center space-x-2 rounded-xl bg-slate-50 px-4 py-2 text-sm text-slate-600">
-          <i className="fas fa-clock text-slate-400"></i>
-          <span className="font-mono font-medium">10:01 AM</span>
-        </div>
-        <div className="rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-600">
-          Today: February 14, 2026
-        </div>
-      </div>
-
-      {/* Right - Profile only */}
-      <div className="flex flex-1 items-center justify-end">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-emerald-500 to-teal-600 text-sm font-bold text-white shadow-lg md:h-10 md:w-10 md:text-base">
-          S
-        </div>
+      {/* Right - Avatar */}
+      <div style={styles.right}>
+        <div style={styles.avatar}>S</div>
       </div>
     </div>
   );

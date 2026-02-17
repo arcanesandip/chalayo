@@ -4,8 +4,6 @@ import React from 'react';
 // You can expand this to include global CSS resets or theme providers.
 export default function GlobalStyles() {
   return (
-    <>
-      {/* This component intentionally left minimal to satisfy imports. */}
-    </>
+    <>{/* This component intentionally left minimal to satisfy imports. */}</>
   );
 }
