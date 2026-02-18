@@ -1,31 +1,38 @@
+@import './styles/variables.css';
 @import 'tailwindcss';
 
 @layer utilities {
   .glass-morphism {
-    background: rgba(255, 255, 255, 0.7);
+    background: var(--color-bg-overlay);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
   .text-gradient {
-    background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+    background: var(--gradient-text);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .hero-gradient {
-    background:
-      radial-gradient(ellipse at top, rgba(37, 99, 235, 0.15), transparent 50%),
-      radial-gradient(
-        ellipse at bottom,
-        rgba(124, 58, 237, 0.15),
-        transparent 50%
-      );
+    background: var(--gradient-hero-radial);
   }
 }
 
 * {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-primary);
+}
+
+body,
+html {
+  scroll-behavior: smooth;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-page);
+}
+
+button {
+  cursor: pointer;
+  font-family: var(--font-primary);
 }

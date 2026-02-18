@@ -1,0 +1,155 @@
+/* CTA Section */
+.cta-section {
+  background: linear-gradient(to bottom right, #111827, #1f2937, #111827);
+  padding: 5rem 0;
+  text-align: center;
+}
+
+@media (min-width: 1024px) {
+  .cta-section {
+    padding: 8rem 0;
+  }
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.cta-heading {
+  margin-bottom: 1.5rem;
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: white;
+}
+
+@media (min-width: 640px) {
+  .cta-heading {
+    font-size: 2.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .cta-heading {
+    font-size: 3rem;
+  }
+}
+
+.cta-description {
+  max-width: 42rem;
+  margin: 0 auto 2.5rem;
+  font-size: 1.25rem;
+  color: #d1d5db;
+}
+
+.cta-button {
+  background: linear-gradient(to right, #3b82f6, #9333ea);
+  color: white;
+  font-weight: 600;
+  padding: 1rem 2rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.cta-disclaimer {
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
+  color: #9ca3af;
+}
+
+/* Footer */
+.footer {
+  background-color: #111827;
+  border-top: 1px solid #1f2937;
+  padding: 3rem 0;
+}
+
+.footer-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  color: #9ca3af;
+}
+
+@media (min-width: 1024px) {
+  .footer-container {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.footer-brand {
+  color: #9ca3af;
+}
+
+.brand-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.brand-logo {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(to bottom right, #3b82f6, #9333ea);
+}
+
+.brand-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+}
+
+.brand-description {
+  font-size: 0.875rem;
+}
+
+.footer-section {
+  color: #9ca3af;
+}
+
+.footer-heading {
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: white;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.footer-links li {
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+.footer-links li:hover {
+  color: white;
+}
+
+.footer-copyright {
+  max-width: 1280px;
+  margin: 0 auto;
+  margin-top: 3rem;
+  padding: 0 1rem;
+  padding-top: 2rem;
+  border-top: 1px solid #1f2937;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #6b7280;
+}

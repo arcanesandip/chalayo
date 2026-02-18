@@ -1,3 +1,5 @@
+import './Pricing.css';
+
 const plans = [
   {
     name: 'Starter',
@@ -34,45 +36,39 @@ const plans = [
 
 export default function Pricing() {
   return (
-    <section id="pricing" className="py-20 lg:py-32">
-      <div className="container mx-auto px-4">
-        <div className="mb-16 text-center">
-          <h2 className="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">
-            Simple, Transparent Pricing
-          </h2>
-          <p className="text-gray-600">
+    <section id="pricing" className="pricing-section">
+      <div className="pricing-container">
+        <div className="pricing-header">
+          <h2 className="pricing-title">Simple, Transparent Pricing</h2>
+          <p className="pricing-subtitle">
             Choose the plan that's right for your business growth.
           </p>
         </div>
 
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-3">
+        <div className="pricing-grid">
           {plans.map((plan, i) => (
             <div
               key={i}
-              className={`rounded-3xl border p-8 ${
-                plan.highlighted
-                  ? 'relative scale-105 border-blue-500 bg-white shadow-xl'
-                  : 'border-gray-200 bg-gray-50'
+              className={`pricing-card ${
+                plan.highlighted ? 'pricing-card-highlighted' : ''
               }`}
             >
               {plan.highlighted && (
-                <span className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-blue-500 px-4 py-1 text-sm font-medium text-white">
-                  Most Popular
-                </span>
+                <span className="pricing-badge">Most Popular</span>
               )}
-              <h3 className="mb-2 text-xl font-bold">{plan.name}</h3>
-              <div className="mb-6">
-                <span className="text-4xl font-bold">${plan.price}</span>
-                <span className="text-gray-500">/month</span>
+
+              <h3 className="plan-name">{plan.name}</h3>
+
+              <div className="plan-price">
+                <span className="price-amount">${plan.price}</span>
+                <span className="price-period">/month</span>
               </div>
-              <ul className="mb-8 space-y-4">
+
+              <ul className="plan-features">
                 {plan.features.map((feature, index) => (
-                  <li
-                    key={index}
-                    className="flex items-center text-sm text-gray-600"
-                  >
+                  <li key={index} className="feature-item">
                     <svg
-                      className="mr-2 h-5 w-5 text-green-500"
+                      className="feature-icon"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -88,11 +84,12 @@ export default function Pricing() {
                   </li>
                 ))}
               </ul>
+
               <button
-                className={`w-full rounded-xl py-3 font-semibold transition-all ${
+                className={`plan-button ${
                   plan.highlighted
-                    ? 'bg-blue-600 text-white hover:bg-blue-700'
-                    : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+                    ? 'plan-button-primary'
+                    : 'plan-button-secondary'
                 }`}
               >
                 {plan.buttonText}

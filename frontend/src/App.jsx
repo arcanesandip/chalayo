@@ -1,21 +1,16 @@
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Features from './components/Features';
-import Pricing from './components/Pricing';
-import Testimonials from './components/Testimonials';
-import Footer from './components/Footer';
+import Home from './pages/Home';
+import { Routes, Route } from 'react-router-dom';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
 
-function App() {
+export default function App() {
   return (
     <div className="min-h-screen bg-white font-sans antialiased">
-      <Navbar />
-      <Hero />
-      <Features />
-      <Pricing />
-      <Testimonials />
-      <Footer />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
     </div>
   );
 }
-
-export default App;

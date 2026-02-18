@@ -32,3 +32,4 @@ frontend/lerna-debug.log*
 *.sln
 *.sw?
 frontend/.vite/.tsbuildinfo
+docs
