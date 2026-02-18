@@ -2,68 +2,69 @@ import React from 'react';
 
 const styles = {
   header: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottom: '1px solid #e2e8f0',
-    backgroundColor: '#ffffff',
-    padding: '16px',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+    display:         'flex',
+    alignItems:      'center',
+    justifyContent:  'space-between',
+    borderBottom:    '1px solid var(--color-border-default)',
+    backgroundColor: 'var(--color-bg-surface)',
+    padding:         'var(--space-4)',
+    boxShadow:       'var(--shadow-sm)',
   },
   left: {
-    display: 'flex',
-    flex: 1,
+    display:    'flex',
+    flex:        1,
     alignItems: 'center',
-    gap: '12px',
+    gap:        'var(--space-3)',
   },
   hamburger: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '40px',
-    width: '40px',
-    borderRadius: '12px',
-    border: 'none',
-    background: 'transparent',
-    cursor: 'pointer',
-    transition: 'background-color 0.15s ease',
+    display:         'flex',
+    alignItems:      'center',
+    justifyContent:  'center',
+    height:          '40px',
+    width:           '40px',
+    borderRadius:    'var(--radius-md)',
+    border:          'none',
+    background:      'transparent',
+    cursor:          'pointer',
+    transition:      'var(--transition-color)',
   },
   hamburgerIcon: {
     height: '24px',
-    width: '24px',
-    color: '#334155',
+    width:  '24px',
+    color:  'var(--color-text-primary)',
   },
   title: {
-    margin: 0,
-    fontSize: '1.125rem',
-    fontWeight: 600,
-    color: '#0f172a',
+    margin:     0,
+    fontSize:   'var(--text-lg)',
+    fontWeight: 'var(--font-semibold)',
+    fontFamily: 'var(--font-primary)',
+    color:      'var(--color-neutral-900)',
   },
   right: {
-    display: 'flex',
-    flex: 1,
-    alignItems: 'center',
+    display:        'flex',
+    flex:            1,
+    alignItems:     'center',
     justifyContent: 'flex-end',
   },
   avatar: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '40px',
-    width: '40px',
-    borderRadius: '12px',
-    background: 'linear-gradient(to bottom right, #10b981, #0d9488)',
-    fontSize: '0.875rem',
-    fontWeight: 700,
-    color: '#ffffff',
-    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+    display:         'flex',
+    alignItems:      'center',
+    justifyContent:  'center',
+    height:          '40px',
+    width:           '40px',
+    borderRadius:    'var(--radius-md)',
+    background:      'var(--gradient-brand)',
+    fontSize:        'var(--text-sm)',
+    fontWeight:      'var(--font-bold)',
+    fontFamily:      'var(--font-primary)',
+    color:           'var(--color-text-inverse)',
+    boxShadow:       'var(--shadow-md)',
   },
 };
 
 export default function Header({ menuItems, activeTab, setSidebarOpen }) {
   const [hamburgerHovered, setHamburgerHovered] = React.useState(false);
 
-  // Hide hamburger on large screens (≥1024px)
   const [isLargeScreen, setIsLargeScreen] = React.useState(
     typeof window !== 'undefined' ? window.innerWidth >= 1024 : false
   );
@@ -79,14 +80,17 @@ export default function Header({ menuItems, activeTab, setSidebarOpen }) {
 
   return (
     <div style={styles.header}>
-      {/* Left - Hamburger + Title */}
+      {/* Left — Hamburger + Title */}
       <div style={styles.left}>
         {!isLargeScreen && (
           <button
             onClick={() => setSidebarOpen(true)}
             style={{
               ...styles.hamburger,
-              backgroundColor: hamburgerHovered ? '#f1f5f9' : 'transparent',
+              // dynamic hover — runtime state, must stay inline
+              backgroundColor: hamburgerHovered
+                ? 'var(--color-neutral-100)'
+                : 'transparent',
             }}
             onMouseEnter={() => setHamburgerHovered(true)}
             onMouseLeave={() => setHamburgerHovered(false)}
@@ -110,7 +114,7 @@ export default function Header({ menuItems, activeTab, setSidebarOpen }) {
         <h2 style={styles.title}>{activeLabel}</h2>
       </div>
 
-      {/* Right - Avatar */}
+      {/* Right — Avatar */}
       <div style={styles.right}>
         <div style={styles.avatar}>S</div>
       </div>
