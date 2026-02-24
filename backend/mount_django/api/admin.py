@@ -4,12 +4,9 @@ from django.utils.translation import gettext_lazy as _
 
 from .models import (
     AdditionalCharges,
-    Bill,
     Company,
     Customer,
     ItemActivity,
-    OrderList,
-    OrderSummary,
     Product,
     ProductCategory,
     RemainingAmount,
@@ -19,7 +16,6 @@ from .models import (
     BalanceAdjustment,
     ExpenseCategory,
     Expense,
-    Purchase,
     CompanyRole,
 )
 
@@ -58,6 +54,7 @@ class CompanyAdmin(admin.ModelAdmin):
 # Custom User Admin
 class CustomUserAdmin(UserAdmin):
     list_display = (
+        "role",
         "username",
         "email",
         "phone",
@@ -114,6 +111,7 @@ class CustomUserAdmin(UserAdmin):
             {
                 "classes": ("wide",),
                 "fields": (
+                    "role",
                     "username",
                     "email",
                     "phone",
@@ -182,61 +180,6 @@ class ProductAdmin(admin.ModelAdmin):
     raw_id_fields = ("category",)
 
 
-# Order List Admin
-@admin.register(OrderList)
-class OrderListAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "customer",
-        "company",
-        "created_at",
-        "created_by",
-    )
-    list_filter = ("company", "created_at")
-    search_fields = ("customer__name", "company__name", "created_by__username")
-    raw_id_fields = ("customer", "created_by")
-
-
-# Bill Admin
-@admin.register(Bill)
-class BillAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "order",
-        "product",
-        "quantity",
-        "product_price",
-        "created_at",
-        "total_price",
-        "discount",
-    )
-    list_filter = ("created_at", "order__company")
-    search_fields = ("order__id", "product__name")
-    raw_id_fields = ("order", "product")
-
-    def total_price(self, obj):
-        return obj.product_price * obj.quantity
-
-    total_price.short_description = "Total"
-
-
-# Order Summary Admin
-@admin.register(OrderSummary)
-class OrderSummaryAdmin(admin.ModelAdmin):
-    list_display = (
-        "order",
-        "total_amount",
-        "discount",
-        "tax",
-        "final_amount",
-        "due_amount",
-        "calculated_on",
-    )
-    list_filter = ("calculated_on",)
-    search_fields = ("order__id",)
-    raw_id_fields = ("order",)
-
-
 # Register User with Custom Admin
 admin.site.register(User, CustomUserAdmin)
 
@@ -265,7 +208,6 @@ class RemainingAmountAdmin(admin.ModelAdmin):
 class ItemActivityAdmin(admin.ModelAdmin):
     list_display = (
         "order",
-        "purchase",
         "product",
         "type",
         "created_at",
@@ -313,9 +255,4 @@ class ExpenseCategoryAdmin(admin.ModelAdmin):
 @admin.register(Expense)
 class ExpenseAdmin(admin.ModelAdmin):
     list_display=("id","created_at","expense_number","total_amount","remarks","category",)
-    search_fields = ("created_at",)
-
-@admin.register(Purchase)
-class PurchaseAdmin(admin.ModelAdmin):
-    list_display=("uid","id","created_at","customer","summary")
     search_fields = ("created_at",)
