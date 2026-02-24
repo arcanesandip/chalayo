@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders', #added
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware', #added
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -133,3 +135,21 @@ SIMPLE_JWT ={
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# --- DEVELOPMENT ONLY: ALLOW FRONTEND TO CONNECT ---
+# Igit i added 'corsheaders' to INSTALLED_APPS/MIDDLEWARE and set ALLOW_ALL_ORIGINS = True 
+# because the browser (Chromium) blocks the JWT token response due to CORS policy 
+# when calling from a different origin (e.g., a local HTML file).
+# This should be changed to a specific whitelist (CORS_ALLOWED_ORIGINS) in production.
+# ----------------------------------------------------
+
+CORS_ALLOW_ALL_ORIGINS = True #production only 
+
+# # In production, do NOT use ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_ALL_ORIGINS = False
+
+# # Only allow your specific website
+# CORS_ALLOWED_ORIGINS = [
+#     "https://www.your-real-app.com",
+#     "https://your-frontend-subdomain.com",
+# ]
